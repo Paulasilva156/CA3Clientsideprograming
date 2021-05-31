@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="style2.css">
+<style>
+
+.button {
+  background-color: #008CBA; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+   
+  overflow: hidden;
+  background-color: #008cba;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color:#1688ae;
+  color: white;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 100%;
+  padding: 30px 15px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+input[type=password]{
+  width: 100%;
+  padding: 12px 20px;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  
+}
+
+th {
+    text-align: left;
+}
+.table{border-collapse: collapse;
+    border-spacing: 0;
+	    background-color: #f9f9f9;
+    }
+.table td, .table th {
+    padding: 8px;
+	border: 1px solid #ddd;}
+	
+.input_field{
+	width:50%;
+	min-height: 90px;
+	margin: 30px auto 0;
+}	
+.input_field label{
+	display:block;
+	color:#ffffff;
+	margin-bottom:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a class="active" href="home.html">Home</a>
+  <a href="component.html">Component</a>
+</div>
+
+<div class="row">
+  <div class="column" style="background-color:#2c2e31;">
+	<div class="input_field">
+	<label>Staff Password</label>
+	<input name="password" id="password" type="password" size="15" maxlength="100" onkeyup="return passwordChanged();" />
+	<div id="strength" style="color:#d2d2d2; margin-top:8px;"></div>
+	</div>
+    
+  </div>
+  <div class="column" style="background-color:#f9f9f9;">
+  <table id ="customers" class="table" style="margin: 0 auto;">
+	<thead>
+    <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Image</th>
+    </tr>
+	</thead>
+
+    <tbody id="myTable">
+        
+    </tbody>
+</table>
+  </div>
+  <div class="column" style="">
+	
+   <button class="button" onclick="myFunction();">Menu Items</button>
+   <div id="menu_item" style="display:none; margin-top:30px;">  
+   </div> 
+   <span id="ss"></span>
+   
+   
+   <button class="button" onclick="getBill();">Submit</button><br>
+   <span id="bill_data" style="display:none;">
+	
+		<table class="table" style="width: 133%;
+    margin-bottom: 10%;">
+			<tr>
+				<td style="background-color: #2196f3;color: white;">Total Bill Amount</td>
+			</tr>
+			<tr>
+				<td id="total_amt"></td>
+			</tr>
+		</table>
+		<table class="table" style="width: 133%;
+    margin-bottom: 10%;">
+			<tr>
+				<td colspan ="2" style="background-color: #2196f3;color: white;">Total Items Bill Amount</td>
+			</tr>
+			<tr>
+				<td>Total Starters Amount</td>
+				<td id="total_starters_amt"></td>
+			</tr>
+			<tr>
+				<td>Total Main Amount</td>
+				<td id="total_main_amt"></td>
+			</tr>
+			<tr>
+				<td>Total Dessert Amount</td>
+				<td id="total_dessert_amt"></td>
+			</tr>
+			<tr>
+				<td>Total Drink Amount</td>
+				<td id="total_drink_amt"></td>
+			</tr>
+		
+		
+		</table>
+		<table class="table" style="width: 133%;
+    margin-bottom: 10%;">
+			<tr>
+				<td colspan ="2" style="background-color: #2196f3;color: white;">Total Veg/Non-Veg Amount</td>
+			</tr>
+			<tr>
+				<td>Total Veg Amount</td>
+				<td id="total_veg_amt"></td>
+			</tr>
+			<tr>
+				<td>Total Non Veg Amount</td>
+				<td id="total_non_veg_amt"></td>
+			</tr>
+			
+		</table>
+   
+   </span>
+   
+   
+   
+  </div>
+</div>
+<script>
+
+	var menu = [{'name':'Starters'},
+							{'name':'Main'},
+							{'name':'Dessert'},
+							{'name':'Drink'},
+	];
+	
+	function myFunction(){
+		var html_chk ="";
+		var j = 1;
+		for(var i=0; i < menu.length; i++){
+		
+			html_chk+='<label class="container">'+menu[i].name+'<input type="checkbox" onclick = "getItems(this.value);" id="main'+j+'" value = "'+j+'"><span class="checkmark"></span></label><span id="items'+j+'" style="display:none"></span>';
+			j++;
+		}
+		document.getElementById("menu_item").innerHTML = html_chk;
+		var x = document.getElementById("menu_item");
+		  if (x.style.display === "none") {
+			x.style.display = "block";
+		  } else {
+			x.innerHTML = "";
+			x.style.display = "none";
+		  }
+		
+	}
+	
+	var Starters = [{'name':'Spring Rolls','des':'Spring Rolls are one of the most common Chinese delicacies.','veg':'Veg','Price':'5'},
+				{'name':'Butter Garlic Prawns','des':'A seafood lover can’t keep his hands away from this one.','veg':'Non-Veg','Price':'15'},
+				{'name':'Manchurians','des':'The light chunks of cottage cheese, or the succulent pieces of chicken, Manchurian is a delight which never fails to impress us.','veg':'Veg','Price':'7'},
+				{'name':'Chicken Lollipops','des':'A dish that is popular with the Kiddos and adults alike.','veg':'Non-Veg','Price':'10'},
+				];
+	var Main = [{'name':'Chinese Noodles','des':'One of the staples in every home, noodles are not just a kids favourite snack to binge on but are also equally loved by adults.','veg':'Veg','Price':'10'},
+				{'name':'Chilli Chicken','des':'A fiery delight straight from the Sichuan region. It is loaded with pungent spices like brown pepper. red chillies, ginger, green chillies and white pepper.','veg':'Non-Veg','Price':'18'},
+				{'name':'Honey Chilli Potato','des':'The quintessential Indo-Chinese snack! Honey chilli potato is what youll find at every Chinese van in and around north India. ','veg':'Veg','Price':'8'},
+				{'name':'Peri Peri Chicken Satay','des':'With an addition of fiery peri peri sauce, chicken satay is a mouth-watering starter recipe to prepare at home.','veg':'Non-Veg','Price':'15'},
+				];
+	var Dessert = [{'name':'Red Bean Bun','des':'Red bean buns are the popular sweet version of the baozi, or steamed bun, consisting of a steamed bun filled with red bean paste. ','veg':'Veg','Price':'5'},
+				{'name':'Egg Tarts','des':'The egg tarts were first introduced to Mainland China via Macau, by Portugese colonizers. ','veg':'Non-Veg','Price':'6'},
+				{'name':'Pumpkin Pancake','des':'Pumpkin pancakes are easily described: they are deep fried pumpkin pancakes consisting mainly of pumpkin, sugar, and flour.  ','veg':'Veg','Price':'4'},
+				{'name':'Sweet Egg Bun','des':'Another Southern Chinese favorite, the sweet egg bun consists of a warm bun filled with a mix of egg yolk and sugar.','veg':'Non-Veg','Price':'8'},
+				];
+	var Drink = [{'name':'Blue Hawaii','des':'Rum, Vodka, Galliano and Fruit Juices','veg':'Veg','Price':'20'},
+				{'name':'Giant Touchdown ','des':'Southern Comfort, Apricot Brandy, Triple Sec and Cranberry Juice ','veg':'Veg','Price':'25'},
+				{'name':'Mai Tai','des':'Six Different Rums and Tropical Drinks','veg':'Veg','Price':'30'},
+				{'name':'Mango Tango','des':'Vodka, Rum, Mango Juice and Fruit Juices','veg':'Veg','Price':'32'},
+				];
+	function getItems(value){
+		if(value == 1)
+		{
+			
+			var html_chk ="";
+			var j = 1;
+			for(var i=0; i < Starters.length; i++){
+			
+				html_chk+='<label class="container" style="margin-left:20px;">'+Starters[i].name+'<input type="checkbox" id="starter'+j+'" onclick = "getItemsData('+j+','+value+');" value = "'+Starters[i].Price+'"><span class="checkmark"></span></label><span id="tb_s'+j+'" style="display:none; margin-left:20px; margin-top:10px;"></span><br>';
+				j++;
+			}
+		}
+		else if(value == 2)
+		{
+			var html_chk ="";
+			var j = 1;
+			for(var i=0; i < Main.length; i++){
+			
+				html_chk+='<label class="container" style="margin-left:20px;">'+Main[i].name+'<input type="checkbox" id = "Main'+j+'"onclick = "getItemsData('+j+','+value+');" value = "'+Starters[i].Price+'"><span class="checkmark"></span></label><span id="tb_m'+j+'" style="display:none;" margin-left:20px; ></span><br>';
+				j++;
+			}	
+		}
+		else if(value == 3)
+		{
+			
+			var html_chk ="";
+			var j = 1;
+			for(var i=0; i < Dessert.length; i++){
+			
+				html_chk+='<label class="container" style="margin-left:20px;">'+Dessert[i].name+'<input type="checkbox" id="Desert'+j+'" onclick = "getItemsData('+j+','+value+');" value = "'+Starters[i].Price+'"><span class="checkmark"></span></label><span id="tb_de'+j+'" style="display:none;" margin-left:20px; ></span><br>';
+				j++;
+			}	
+		}
+		else if(value == 4)
+		{
+			
+			var html_chk ="";
+			var j = 1;
+			for(var i=0; i < Drink.length; i++){
+			
+				html_chk+='<label class="container" style="margin-left:20px;">'+Drink[i].name+'<input type="checkbox" id="Drink'+j+'" onclick = "getItemsData('+j+','+value+');" value = "'+Starters[i].Price+'"><span class="checkmark"></span></label><span id="tb_dr'+j+'" style="display:none;" margin-left:20px; ></span><br>';
+				j++;
+			}	
+		}
+		document.getElementById("items"+value).innerHTML = html_chk;
+			var x = document.getElementById("items"+value);
+			  if (x.style.display === "none") {
+				x.style.display = "inline-block";
+			  } else {
+				x.innerHTML = "";
+				x.style.display = "none";
+			  }
+	}
+	
+	function getItemsData(item_val,menu_val){
+	
+		if(menu_val ==1){
+			var html_chk ="";
+			var j = 1;
+			if(item_val ==1){
+					html_chk+='<table class="customers" style="border:1px solid black;"><tr  ><td>Description:-'+Starters[0].des+'</td><td>veg:-'+Starters[0].veg+'</td><td>Price:-'+Starters[0].Price+'</td></tr></table>';
+			}
+			else if(item_val ==2){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Starters[1].des+'</td><td>veg:-'+Starters[1].veg+'</td><td>Price:-'+Starters[1].Price+'</td></tr></table>';
+			}
+			else if(item_val ==3){
+				html_chk+='<table class="customers"style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Starters[2].des+'</td><td>veg:-'+Starters[2].veg+'</td><td>Price:-'+Starters[2].Price+'</td></tr></table>';
+			}
+			else if(item_val ==4){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Starters[3].des+'</td><td>veg:-'+Starters[3].veg+'</td><td>Price:-'+Starters[3].Price+'</td></tr></table>';	
+			}
+			document.getElementById("tb_s"+item_val).innerHTML = html_chk;
+			var x = document.getElementById("tb_s"+item_val);
+		}
+		else if(menu_val == 2){
+			var html_chk ="";
+			var j = 1;
+			if(item_val ==1){
+					html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td style="border:1px solid black;">Description:-'+Main[0].des+'</td><td style="border:1px solid black;">veg:-'+Main[0].veg+'</td><td style="border:1px solid black;">Price:-'+Main[0].Price+'</td></tr></table>';
+			}
+			else if(item_val ==2){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Main[1].des+'</td><td>veg:-'+Main[1].veg+'</td><td>Price:-'+Main[1].Price+'</td></tr></table>';
+			}
+			else if(item_val ==3){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Main[2].des+'</td><td>veg:-'+Main[2].veg+'</td><td>Price:-'+Main[2].Price+'</td></tr></table>';
+			}
+			else if(item_val ==4){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Main[3].des+'</td><td>veg:-'+Main[3].veg+'</td><td>Price:-'+Main[3].Price+'</td></tr></table>';	
+			}
+			document.getElementById("tb_m"+item_val).innerHTML = html_chk;
+			var x = document.getElementById("tb_m"+item_val);
+		}
+		else if(menu_val ==3){
+				var html_chk ="";
+			var j = 1;
+			if(item_val ==1){
+					html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td style="border:1px solid black;">Description:-'+Dessert[0].des+'</td><td style="border:1px solid black;">veg:-'+Dessert[0].veg+'</td><td style="border:1px solid black;">Price:-'+Dessert[0].Price+'</td></tr></table>';
+			}
+			else if(item_val ==2){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Dessert[1].des+'</td><td>veg:-'+Dessert[1].veg+'</td><td>Price:-'+Dessert[1].Price+'</td></tr></table>';
+			}
+			else if(item_val ==3){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Dessert[2].des+'</td><td>veg:-'+Dessert[2].veg+'</td><td>Price:-'+Dessert[2].Price+'</td></tr></table>';
+			}
+			else if(item_val ==4){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Dessert[3].des+'</td><td>veg:-'+Dessert[3].veg+'</td><td>Price:-'+Dessert[3].Price+'</td></tr></table>';	
+			}
+			document.getElementById("tb_de"+item_val).innerHTML = html_chk;
+			var x = document.getElementById("tb_de"+item_val);
+		}
+		else if(menu_val == 4){
+				var html_chk ="";
+			var j = 1;
+			if(item_val ==1){
+					html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td style="border:1px solid black;">Description:-'+Drink[0].des+'</td><td style="border:1px solid black;">veg:-'+Drink[0].veg+'</td><td style="border:1px solid black;">Price:-'+Drink[0].Price+'</td></tr></table>';
+			}
+			else if(item_val ==2){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Drink[1].des+'</td><td>veg:-'+Drink[1].veg+'</td><td>Price:-'+Drink[1].Price+'</td></tr></table>';
+			}
+			else if(item_val ==3){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Drink[2].des+'</td><td>veg:-'+Drink[2].veg+'</td><td>Price:-'+Drink[2].Price+'</td></tr></table>';
+			}
+			else if(item_val ==4){
+				html_chk+='<table class="customers" style="border:1px solid black;"><tr style="border:1px solid black;"><td>Description:-'+Drink[3].des+'</td><td>veg:-'+Drink[3].veg+'</td><td>Price:-'+Drink[3].Price+'</td></tr></table>';	
+			}
+			document.getElementById("tb_dr"+item_val).innerHTML = html_chk;
+			var x = document.getElementById("tb_dr"+item_val);
+		}
+		  if (x.style.display === "none") {
+			x.style.display = "inline-block";
+		  } else {
+			x.innerHTML = "";
+			x.style.display = "none";
+		  }
+	}
+	
+	
+	
+	
+	
+	
+	
+
+
+	const api_url = "https://randomuser.me/api";
+	var html='';
+	for(var  i=0;i<5;i++){
+		getapi(api_url); 
+		
+		async function getapi(url) {
+			const response = await fetch(url);
+			var data = await response.json();
+			
+				showData(data);
+			 
+		}
+		function showData(data){
+				
+				for (let rs of data.results) {
+				
+					html+='<tr><td>'+rs.name.title+' '+ rs.name.first+' '+ rs.name.last+'</td><td>'+rs.gender+'</td><td>'+rs.email+'</td><td><img src="'+rs.picture.thumbnail+'"></td></tr>';
+				}
+				document.getElementById("myTable").innerHTML = html;
+			}
+		}
+
+</script>
+
+
+<script language="javascript">
+    function passwordChanged() {
+        var strength = document.getElementById('strength');
+        var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+        var mediumRegex = new RegExp("^(?=.{6,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9])))", "g");
+        var enoughRegex = new RegExp("(?=.{4,}).*", "g");
+        var pwd = document.getElementById("password");
+        if (pwd.value.length == 0) {
+            strength.innerHTML = 'Please Type Password';
+        } else if (false == enoughRegex.test(pwd.value)) {
+            strength.innerHTML = 'Password Must Contain 8 charactes';
+        } else if (strongRegex.test(pwd.value)) {
+            strength.innerHTML = '<span style="color:green">Strong!</span>';
+        } else if (mediumRegex.test(pwd.value)) {
+            strength.innerHTML = '<span style="color:orange">Medium!</span>';
+        } else {
+            strength.innerHTML = '<span style="color:red">Weak!</span>';
+        }
+    }
+</script>
+
+
+<script>
+	function getBill(){
+			var main1 = document.getElementById("main1").checked;
+			var main2 = document.getElementById("main2").checked;
+			var main3 = document.getElementById("main3").checked;
+			var main4 = document.getElementById("main4").checked;
+			
+			if(main1 == true){
+				var s1 = document.getElementById("starter1").checked;
+				var s2 = document.getElementById("starter2").checked;
+				var s3 = document.getElementById("starter3").checked;
+				var s4 = document.getElementById("starter4").checked;
+			}
+			else{
+				var s1 = false;
+				var s2 = false;
+				var s3 = false;
+				var s4 = false;
+			}
+			
+			if(main2 == true){
+				var m1 = document.getElementById("Main1").checked;
+				var m2 = document.getElementById("Main2").checked;
+				var m3 = document.getElementById("Main3").checked;
+				var m4 =document.getElementById("Main4").checked;
+			}
+			else{
+				var m1 = false;
+				var m2 = false;
+				var m3 = false;
+				var m4 = false;
+			}
+			if(main3 == true){
+				var d1 = document.getElementById("Desert1").checked;
+				var d2 = document.getElementById("Desert2").checked;
+				var d3 = document.getElementById("Desert3").checked;
+				var d4 = document.getElementById("Desert4").checked;
+			
+			}
+			else{
+				var d1 = false;
+				var d2 = false;
+				var d3 = false;
+				var d4 = false;
+			}
+			if(main4 == true){
+					var dr1 = document.getElementById("Drink1").checked;
+					var dr2 = document.getElementById("Drink2").checked;
+					var dr3 = document.getElementById("Drink3").checked;
+					var dr4 = document.getElementById("Drink4").checked;
+			}
+			else{
+				var dr1 = false;
+				var dr2 = false;
+				var dr3 = false;
+				var dr4 = false;
+			}
+			
+			
+			
+		
+			
+			
+			if(s1 == true){
+				s1 = document.getElementById("starter1").value;
+			}
+			else{
+				s1 = 0;
+			}
+			if(s2 == true){
+				s2 = document.getElementById("starter2").value;
+			}else{
+				s2=0;
+			}
+			if(s3 == true){
+				s3 = document.getElementById("starter3").value;
+			}else{
+				s3 = 0;
+			}
+			if(s4 == true){
+				s4 = document.getElementById("starter4").value;
+			}else{
+				s4 = 0;
+			}
+			if(m1 == true){
+				m1 = document.getElementById("Main1").value;
+			}
+			else{
+				m1 = 0;
+			}
+			if(m2 == true){
+				m2 = document.getElementById("Main2").value;
+			}else{
+				m2=0;
+			}
+			if(m3 == true){
+				m3 = document.getElementById("Main3").value;
+			}else{
+				m3 = 0;
+			}
+			if(m4 == true){
+				m4 = document.getElementById("Main4").value;
+			}else{
+				m4 = 0;
+			}
+			if(d1 == true){
+				d1 = document.getElementById("Desert1").value;
+			}
+			else{
+				d1 = 0;
+			}
+			if(d2 == true){
+				d2 = document.getElementById("Desert2").value;
+			}else{
+				d2=0;
+			}
+			if(d3 == true){
+				d3 = document.getElementById("Desert3").value;
+			}else{
+				d3 = 0;
+			}
+			if(d4 == true){
+				d4 = document.getElementById("Desert4").value;
+			}else{
+				d4 = 0;
+			}
+			if(dr1 == true){
+				dr1 = document.getElementById("Drink1").value;
+			}
+			else{
+				dr1 = 0;
+			}
+			if(dr2 == true){
+				dr2 = document.getElementById("Drink2").value;
+			}else{
+				dr2=0;
+			}
+			if(dr3 == true){
+				dr3 = document.getElementById("Drink3").value;
+			}else{
+				dr3 = 0;
+			}
+			if(dr4 == true){
+				dr4 = document.getElementById("Drink4").value;
+			}else{
+				dr4 = 0;
+			}
+	
+			var total_amt = parseInt(s1)+parseInt(s2)+parseInt(s3)+parseInt(s4)+parseInt(d1)+parseInt(d2)+parseInt(d3)+parseInt(d4)+parseInt(m1)+parseInt(m2)+parseInt(m3)+parseInt(m4)+parseInt(dr1)+parseInt(dr2)+parseInt(dr3)+parseInt(dr4);
+			var total_veg = parseInt(s1)+parseInt(s3)+parseInt(d1)+parseInt(d3)+parseInt(m1)+parseInt(m3)+parseInt(dr1)+parseInt(dr2)+parseInt(dr3)+parseInt(dr4);
+			var total_non_veg = parseInt(s2)+parseInt(s4)+parseInt(d2)+parseInt(d4)+parseInt(m2)+parseInt(m4);
+			var total_s_amt = parseInt(s1)+parseInt(s2)+parseInt(s3)+parseInt(s4);
+			var total_m_amt = parseInt(m1)+parseInt(m2)+parseInt(m3)+parseInt(m4);
+			var total_d_amt = parseInt(d1)+parseInt(d2)+parseInt(d3)+parseInt(d4);
+			var total_dr_amt = parseInt(dr1)+parseInt(dr2)+parseInt(dr3)+parseInt(dr4);
+			
+			
+			document.getElementById("total_veg_amt").innerHTML = "$"+total_veg;
+			document.getElementById("total_non_veg_amt").innerHTML = "$"+total_non_veg;
+			document.getElementById("total_starters_amt").innerHTML = "$"+total_s_amt;
+			document.getElementById("total_main_amt").innerHTML = "$"+total_m_amt;
+			document.getElementById("total_dessert_amt").innerHTML = "$"+total_d_amt;
+			document.getElementById("total_drink_amt").innerHTML = "$"+total_dr_amt;
+			document.getElementById("total_amt").innerHTML = "$"+total_amt;
+			
+			
+			
+			var x = document.getElementById("bill_data");
+			if (x.style.display === "none") {
+			x.style.display = "inline-block";
+		  }  
+		}
+
+</script>
+
+
+
+</body>
+</html>
